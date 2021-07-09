@@ -50,25 +50,39 @@ button:hover {
     inputButton = document.getElementById('fileInput');
     inputButton.addEventListener('change',fileUpload); // add event listener for change in fileInput
     function fileUpload() {
-        document.getElementById("input").click();
+        document.getElementById('fileInput').click();
         var file = this.files[0]; // get the first file
         var fileName = file.name; // filename of uploaded file
         var reader = new FileReader(); // create new file reader
         reader.readAsBinaryString(file); // required
         reader.onload = function(e) { // when file upload is completed do the following:
             let data = e.target.result; // data string
+            data = data.split('\n'); // split data into array by new line
             var csvString = 'TLE/3LE:,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):\n'; // initialize final data holder
-            var j = 0; // secondary index
-            for (let i = 0; i < data.length; i++) {
-                if (data[i] === "\n") { // split by carraige return (new line)
-                    csvString = csvString + data.substring(j,i-1) + ","; // write data to string
-                    j = i; // update secondary index
+            csvString = csvString + '"' + data[0] + '\n'; // add first line to output string
+            for (let i = 1; i < data.length-1; i++) { // start from second line
+                var lineNo = data[i].substring(0,1); // line number of TLE/3LE
+                if (lineNo !== '1') { // if not new TLE/3LE
+                    csvString = csvString + data[i] + '\n'; // write TLE/3LE to string
+                    // See if final (data) line of TLE/3LE, then parse data if it is:
+                    if (data[i+1].substring(0,1) !== '3') { // covers 3LE case
+                        MM = data[i].substring(52,62); // mean motion (revs/day)
+                        T = 86400/parseFloat(MM); // orbital period (s)
+                        sma = Math.pow((Math.pow(T,2)*3.9860044188*Math.pow(10,14)/Math.pow((2*Math.PI),2)),(1/3)); // semi-major axis (m)
+                        ecc = '0.' + data[i].substring(26,32); // eccentricity
+                        inc = data[i].substring(8,15); // inclination (deg)
+                        weta = data[i].substring(34,41); // argument of periapsis (deg)
+                        RAAN = data[i].substring(17,24); // right ascension of the ascending node (deg)
+                        Apo = (sma*(1+parseFloat(ecc))-6378137)/1000; // apoapsis (km)
+                        Peri = (sma*(1-parseFloat(ecc))-6378137)/1000; // periapsis (km)
+                        smaH = (sma-6378137)/1000; // semi-major axis height (km)
+                    }
+                } else { // is new TLE/3LE
+                    // Write actual elements data to string:
+                    csvString = csvString + '",' + 'future work' + ',' + MM + ',' + T + ',' + sma + ',' + ecc + ',' + inc + ',' + weta + ',' + RAAN + ',' + Apo + ',' + Peri + ',' + smaH + '\n';
+                    csvString = csvString + '"' + data[i]; // write TLE/3LE to string
                 }
             }
-            csvString = csvString + "," + data.substring(j,data.length-1); // write data to string
-            
-            //console.log(data.length);
-            //console.log(j);
 
             let blobFile = new Blob([csvString], {type: 'text/plain'}); // creates new blob data type from 'csvString' string variable
             // below creates file and downloads it to user's computer
@@ -93,7 +107,7 @@ button:hover {
             for (let i = 1; i < data2.length-1; i++) { // start from second line
                 var lineNo = data2[i].substring(0,1); // line number of TLE/3LE
                 if (lineNo !== '1') { // if not new TLE/3LE
-                    csvString2 = csvString2 + data2[i]; // write TLE/3LE to string
+                    csvString2 = csvString2 + data2[i] + '\n'; // write TLE/3LE to string
                     // See if final (data) line of TLE/3LE, then parse data if it is:
                     if (data2[i+1].substring(0,1) !== '3') { // covers 3LE case
                         MM = data2[i].substring(52,62); // mean motion (revs/day)
@@ -108,6 +122,8 @@ button:hover {
                         smaH = (sma-6378137)/1000; // semi-major axis height (km)
                     }
                 } else { // is new TLE/3LE
+                    // get Epoch:
+                    
                     // Write actual elements data to string:
                     csvString2 = csvString2 + '",' + 'future work' + ',' + MM + ',' + T + ',' + sma + ',' + ecc + ',' + inc + ',' + weta + ',' + RAAN + ',' + Apo + ',' + Peri + ',' + smaH + '\n';
                     csvString2 = csvString2 + '"' + data2[i]; // write TLE/3LE to string
