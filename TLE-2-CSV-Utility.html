@@ -57,7 +57,7 @@ button:hover {
         reader.readAsBinaryString(file); // required
         reader.onload = function(e) { // when file upload is completed do the following:
             let data = e.target.result; // data string
-            var csvString = "Output TLE/3LEs:\n"; // initialize final data holder
+            var csvString = 'TLE/3LE:,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):\n'; // initialize final data holder
             var j = 0; // secondary index
             for (let i = 0; i < data.length; i++) {
                 if (data[i] === "\n") { // split by carraige return (new line)
@@ -87,15 +87,32 @@ button:hover {
         if (data2 === "") { // check if input is empty
             alert('Please submit data to the text input area.'); // alert user to input data
         } else {
-            var csvString2 = "Output TLE/3LEs:\n"; // initialize final data holder
-            var j = 0; // secondary index
-            for (let i = 0; i < data2.length; i++) {
-                if (data2[i] === "\n") { // split by carraige return (new line)
-                    csvString2 = csvString2 + data2.substring(j,i-1) + ","; // write data to string
-                    j = i; // update secondary index
+            data2 = data2.split('\n'); // split data into array by new line
+            var csvString2 = 'TLE/3LE:,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):\n'; // initialize final data holder
+            csvString2 = csvString2 + '"' + data2[0] + '\n'; // add first line to output string
+            for (let i = 1; i < data2.length-1; i++) { // start from second line
+                var lineNo = data2[i].substring(0,1); // line number of TLE/3LE
+                if (lineNo !== '1') { // if not new TLE/3LE
+                    csvString2 = csvString2 + data2[i]; // write TLE/3LE to string
+                    // See if final (data) line of TLE/3LE, then parse data if it is:
+                    if (data2[i+1].substring(0,1) !== '3') { // covers 3LE case
+                        MM = data2[i].substring(52,62); // mean motion (revs/day)
+                        T = 86400/parseFloat(MM); // orbital period (s)
+                        sma = Math.pow((Math.pow(T,2)*3.9860044188*Math.pow(10,14)/Math.pow((2*Math.PI),2)),(1/3)); // semi-major axis (m)
+                        ecc = '0.' + data2[i].substring(26,32); // eccentricity
+                        inc = data2[i].substring(8,15); // inclination (deg)
+                        weta = data2[i].substring(34,41); // argument of periapsis (deg)
+                        RAAN = data2[i].substring(17,24); // right ascension of the ascending node (deg)
+                        Apo = (sma*(1+parseFloat(ecc))-6378137)/1000; // apoapsis (km)
+                        Peri = (sma*(1-parseFloat(ecc))-6378137)/1000; // periapsis (km)
+                        smaH = (sma-6378137)/1000; // semi-major axis height (km)
+                    }
+                } else { // is new TLE/3LE
+                    // Write actual elements data to string:
+                    csvString2 = csvString2 + '",' + 'future work' + ',' + MM + ',' + T + ',' + sma + ',' + ecc + ',' + inc + ',' + weta + ',' + RAAN + ',' + Apo + ',' + Peri + ',' + smaH + '\n';
+                    csvString2 = csvString2 + '"' + data2[i]; // write TLE/3LE to string
                 }
             }
-            csvString2 = csvString2 + "," + data2.substring(j,data2.length-1); // write data to string
 
             let blobText = new Blob([csvString2], {type: 'text/plain'}); // creates new blob data type from 'csvString2' string variable
             var fileName = "Output TLEs"; // temp filename definition
