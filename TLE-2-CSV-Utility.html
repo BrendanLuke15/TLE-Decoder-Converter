@@ -74,7 +74,7 @@ button:hover {
     // Output function
     function output(data,fileName) {
         data = data.split('\n'); // split data into array by new line
-        var csvString = 'TLE:,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):\n'; // initialize final data holder
+        var csvString = 'TLE:,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):,398600.44188,6378137\n'; // initialize final data holder
         //csvString = csvString + '"' + data[0] + '\n'; // add first line to output string
         for (let i = 0; i < data.length; i++) { // start from first line
             var lineNo = data[i].substring(0,1); // line number of TLE
