@@ -48,7 +48,6 @@ function output(data,fileName) {
                         for now just pass the excel equation to the epoch data field
             */
             //day = addDays(new Date(year.toString()+'-01-01T00:00:00Z'),parseFloat(day));
-            //console.log(day);
             Epoch = '=date(' + year + ',1,1)+' + (parseFloat(day)-1).toString(); // excel formula to find epoch
 
             // write data
@@ -82,8 +81,19 @@ function output(data,fileName) {
 }
 
 // function for dates
-function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
+function Epoch2ISODateStr(day, year) {
+    // expects float for day
+    dayF = Math.floor(day);
+    hour = Math.floor((day-dayF)*24);
+    minute = Math.floor((((day-dayF)*24)-hour)*60);
+    second = Math.floor((((((day-dayF)*24)-hour)*60)-minute)*60);
+
+    temp = new Date(year,0,day,hour,minute,second);
+    month = temp.getUTCMonth() + 1;
+    dayS = temp.getDate();
+
+    ISO_String = year + "-" + month + "-" + dayS + "T" + hour + ":" + minute + ":" + second + "Z";
+
+    return ISO_String
+    /* need to fix leading zeros */
 }
