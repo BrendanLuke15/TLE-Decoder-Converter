@@ -32,7 +32,7 @@ function textSubmit() {
 // Output function
 function output(data,fileName) {
     data = data.split('\n'); // split data into array by new line
-    var csvString = 'TLE:,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):,398600.44188,6378137\n'; // initialize final data holder
+    var csvString = 'TLE:,Epoch (Excel Date):,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):,398600.44188,6378137\n'; // initialize final data holder
     for (let i = 0; i < data.length; i++) { // start from first line
         var lineNo = data[i].substring(0,1); // line number of TLE
         if (lineNo == '1') { // new TLE
@@ -45,10 +45,10 @@ function output(data,fileName) {
             }
             day = data[i].substring(20,31); // day of year
             /*
-                        for now just pass the excel equation to the epoch data field
+                for now just pass the excel equation to the epoch data field
             */
-            //day = addDays(new Date(year.toString()+'-01-01T00:00:00Z'),parseFloat(day));
-            Epoch = '=date(' + year + ',1,1)+' + (parseFloat(day)-1).toString(); // excel formula to find epoch
+            EpochExcel = '=date(' + year + ',1,1)+' + (parseFloat(day)-1).toString(); // excel formula to find epoch
+            Epoch = Epoch2ISODateStr(day, year);
 
             // write data
             csvString = csvString + '"' + data[i] + '\n';
@@ -66,7 +66,7 @@ function output(data,fileName) {
             smaH = (sma-6378137)/1000; // semi-major axis height (km) 
 
             // write data
-            csvString = csvString + '","' + Epoch + '",' + MM + ',' + T + ',' + sma + ',' + ecc + ',' + inc + ',' + weta + ',' + RAAN + ',' + Apo + ',' + Peri + ',' + smaH + '\n';              
+            csvString = csvString + '","' + EpochExcel + '",' + Epoch + "," + MM + ',' + T + ',' + sma + ',' + ecc + ',' + inc + ',' + weta + ',' + RAAN + ',' + Apo + ',' + Peri + ',' + smaH + '\n';              
         }
     }
 
@@ -91,6 +91,23 @@ function Epoch2ISODateStr(day, year) {
     temp = new Date(year,0,day,hour,minute,second);
     month = temp.getUTCMonth() + 1;
     dayS = temp.getDate();
+
+    // fix leading zeros if needed
+    if (month < 10) {
+        month = "0" + month.toString();
+    }
+    if (dayS < 10) {
+        dayS = "0" + dayS.toString();
+    }
+    if (hour < 10) {
+        hour = "0" + hour.toString();
+    }
+    if (minute < 10) {
+        minute = "0" + minute.toString();
+    }
+    if (second < 10) {
+        second = "0" + second.toString();
+    }
 
     ISO_String = year + "-" + month + "-" + dayS + "T" + hour + ":" + minute + ":" + second + "Z";
 
