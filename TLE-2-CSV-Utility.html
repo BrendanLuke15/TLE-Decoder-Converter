@@ -8,8 +8,9 @@
     <meta name="description" content="Turn a .txt file of TLE or a text input to a CSV file">
     <meta name="author" content="Brendan Luke">
     <script src="TLE2CSV.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
     <!--
-        Date: September 28, 2021
+        Date: October 1, 2021
     -->
 </head>
 <style>
@@ -45,5 +46,7 @@ button:hover {
     <div id="submitHouse">
         <button id="submitText" onclick="textSubmit()" style="position: relative; left: 30vw; width: 40vw; top: 5vh;">Submit Text Input</button>
     </div>
+    <!-- Post upload canvas for Chart.js -->
+    <canvas id="chart" width="80vw" height="80vw" style="display: none;"></canvas>
 </body>
 </html>

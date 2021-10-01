@@ -1,6 +1,6 @@
 /*
 By: Brendan Luke
-Date: September 29, 2021
+Date: October 1, 2021
 Scope: convert TLEs to CSV format
 */
 
@@ -33,6 +33,8 @@ function textSubmit() {
 function output(data,fileName) {
     data = data.split('\n'); // split data into array by new line
     var csvString = 'TLE:,Epoch (Excel Date):,Epoch:,Mean Motion:,Period (s):,Semi-Major Axis (m):,Eccentricity:,Inclination (deg):,Argument of Periapsis (deg):,Right Ascension of the Ascending Node (deg):,Apoapsis (km):,Periapsis (km):,Semi-Major Axis Height (km):,398600.44188,6378137\n'; // initialize final data holder
+    var j = 0; // counter variable for data object indexing
+    Epoch = []; MM = []; T = []; sma = []; ecc = []; inc = []; weta = []; RAAN = []; Apo = []; Peri = []; smaH = [];
     for (let i = 0; i < data.length; i++) { // start from first line
         var lineNo = data[i].substring(0,1); // line number of TLE
         if (lineNo == '1') { // new TLE
@@ -45,28 +47,30 @@ function output(data,fileName) {
             }
             day = data[i].substring(20,31); // day of year
             /*
-                for now just pass the excel equation to the epoch data field
+                offer two Epoch formats; ISO formatted string, and formula for excel dates
             */
             EpochExcel = '=date(' + year + ',1,1)+' + (parseFloat(day)-1).toString(); // excel formula to find epoch
-            Epoch = Epoch2ISODateStr(day, year);
+            Epoch[j] = Epoch2ISODateStr(day, year);
 
             // write data
             csvString = csvString + '"' + data[i] + '\n';
         } else { // second line of TLE
             csvString = csvString + data[i] + '\n'; // write TLE to string
-            MM = data[i].substring(52,62); // mean motion (revs/day)
-            T = 86400/parseFloat(MM); // orbital period (s)
-            sma = Math.pow((Math.pow(T,2)*3.9860044188*Math.pow(10,14)/Math.pow((2*Math.PI),2)),(1/3)); // semi-major axis (m)
-            ecc = '0.' + data[i].substring(26,32); // eccentricity
-            inc = data[i].substring(8,15); // inclination (deg)
-            weta = data[i].substring(34,41); // argument of periapsis (deg)
-            RAAN = data[i].substring(17,24); // right ascension of the ascending node (deg)
-            Apo = (sma*(1+parseFloat(ecc))-6378137)/1000; // apoapsis (km)
-            Peri = (sma*(1-parseFloat(ecc))-6378137)/1000; // periapsis (km)
-            smaH = (sma-6378137)/1000; // semi-major axis height (km) 
+            MM[j] = data[i].substring(52,62); // mean motion (revs/day)
+            T[j] = 86400/parseFloat(MM[j]); // orbital period (s)
+            sma[j] = Math.pow((Math.pow(T[j],2)*3.9860044188*Math.pow(10,14)/Math.pow((2*Math.PI),2)),(1/3)); // semi-major axis (m)
+            ecc[j] = '0.' + data[i].substring(26,32); // eccentricity
+            inc[j] = data[i].substring(8,15); // inclination (deg)
+            weta[j] = data[i].substring(34,41); // argument of periapsis (deg)
+            RAAN[j] = data[i].substring(17,24); // right ascension of the ascending node (deg)
+            Apo[j] = (sma[j]*(1+parseFloat(ecc[j]))-6378137)/1000; // apoapsis (km)
+            Peri[j] = (sma[j]*(1-parseFloat(ecc[j]))-6378137)/1000; // periapsis (km)
+            smaH[j] = (sma[j]-6378137)/1000; // semi-major axis height (km) 
 
-            // write data
-            csvString = csvString + '","' + EpochExcel + '",' + Epoch + "," + MM + ',' + T + ',' + sma + ',' + ecc + ',' + inc + ',' + weta + ',' + RAAN + ',' + Apo + ',' + Peri + ',' + smaH + '\n';              
+            // write data & iterate
+            csvString = csvString + '","' + EpochExcel + '",' + Epoch[j] + "," + MM[j] + ',' + T[j] + ',' + sma[j] + ',' + ecc[j] + 
+                        ',' + inc[j] + ',' + weta[j] + ',' + RAAN[j] + ',' + Apo[j] + ',' + Peri[j] + ',' + smaH[j] + '\n';              
+            j = j+1;
         }
     }
 
@@ -108,9 +112,6 @@ function Epoch2ISODateStr(day, year) {
     if (second < 10) {
         second = "0" + second.toString();
     }
-
     ISO_String = year + "-" + month + "-" + dayS + "T" + hour + ":" + minute + ":" + second + "Z";
-
     return ISO_String
-    /* need to fix leading zeros */
 }
