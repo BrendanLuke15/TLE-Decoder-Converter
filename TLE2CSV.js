@@ -5,8 +5,10 @@ Scope: convert TLEs to CSV format
 */
 
 // Read uploaded .txt file case:
-inputButton = document.getElementById('fileInput');
-inputButton.addEventListener('change',fileUpload); // add event listener for change in fileInput
+window.onload = function() { // wait until HTML is all loaded, was causing some errors
+    inputButton = document.getElementById('fileInput');
+    inputButton.addEventListener('change',fileUpload); // add event listener for change in fileInput
+}
 function fileUpload() {
     document.getElementById('fileInput').click();
     var file = this.files[0]; // get the first file
@@ -81,7 +83,15 @@ function output(data,fileName) {
     a.href = url;
     a.download = fileName.substring(0,fileName.length-4) + ".csv";
     document.body.appendChild(a);
-    a.click(); 
+    a.click();
+
+    // hide input elements and show canvas
+    document.getElementById("inputHouse").style.display = "none";
+    document.getElementById("submitHouse").style.display = "none";
+    document.getElementById("chart").style.display = "";
+
+    // call charting function
+    createChart();
 }
 
 // function for dates
