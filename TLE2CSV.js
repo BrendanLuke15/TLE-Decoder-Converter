@@ -1,6 +1,6 @@
 /*
 By: Brendan Luke
-Date: October 1, 2021
+Date: October 4, 2021
 Scope: convert TLEs to CSV format
 */
 
@@ -76,6 +76,10 @@ function output(data,fileName) {
         }
     }
 
+    // create outData object containing all data
+    const outData = {epoch:Epoch, MeanMotion:MM, OrbitalPeriod:T, SemiMajorAxisM:sma, Eccentricity:ecc, Inclination:inc, ArguementOfPeriapsis:weta, RightAscensionOfAscendingNode:RAAN,
+                    Apoapsis:Apo, Periapsis:Peri, SemiMajorAxisH:smaH};
+
     let blobFile = new Blob([csvString], {type: 'text/plain'}); // creates new blob data type from 'csvString' string variable
     // below creates file and downloads it to user's computer
     var a = document.createElement("a"),
@@ -88,10 +92,10 @@ function output(data,fileName) {
     // hide input elements and show canvas
     document.getElementById("inputHouse").style.display = "none";
     document.getElementById("submitHouse").style.display = "none";
-    document.getElementById("chart").style.display = "";
+    document.getElementById("chart-container").style.display = "";
 
     // call charting function
-    createChart();
+    createChart(outData);
 }
 
 // function for dates

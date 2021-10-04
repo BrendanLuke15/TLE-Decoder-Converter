@@ -11,7 +11,7 @@
     <script src="chart-tools.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
     <!--
-        Date: October 1, 2021
+        Date: October 4, 2021
     -->
 </head>
 <style>
@@ -48,6 +48,8 @@ button:hover {
         <button id="submitText" onclick="textSubmit()" style="position: relative; left: 30vw; width: 40vw; top: 5vh;">Submit Text Input</button>
     </div>
     <!-- Post upload canvas for Chart.js -->
-    <canvas id="chart" width="40vw" height="80vh" style="display: none; width: 40vw; height: 80vh;"></canvas>
+    <div id="chart-container" style="position: relative; width: 60vw; height: 80vh; display: none; float: right; top: 10vh; right: 3vw; border: 2vh solid #0d5198; border-radius: 3vw;">
+        <canvas id="chart"></canvas>
+    </div>
 </body>
 </html>

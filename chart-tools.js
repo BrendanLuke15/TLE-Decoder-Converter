@@ -1,45 +1,44 @@
 /*
 By: Brendan Luke
-Date: October 1, 2021
+Date: October 4, 2021
 Scope: create chart.js plot from TLE data
 */
 
-function createChart() { // this is called after the TLE decoded data is written to a file and downloading
+function createChart(outData) { // this is called after the TLE decoded data is written to a file and downloading
     var ctx = document.getElementById('chart').getContext('2d');
     var myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: outData.epoch,
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
+                //label: 'Semi-Major Axis Height (km)',
+                data: outData.SemiMajorAxisH,//Object.values(smaH),
+                backgroundColor: '#0D5198',
+                borderColor: '#0D5198',
+                borderWidth: 1.5,
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: {
-                    beginAtZero: true
+                x: {
+                    //type: 'timeseries',
                 }
             }
-        }
+        },
+        plugins: [plugin],
     });
 }
+
+const plugin = {
+    id: 'custom_canvas_background_color',
+    beforeDraw: (chart) => {
+      const ctx = chart.canvas.getContext('2d');
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    }
+  };
