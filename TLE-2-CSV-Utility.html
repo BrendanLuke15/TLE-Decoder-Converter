@@ -10,26 +10,13 @@
     <script src="TLE2CSV.js" async></script>
     <script src="chart-tools.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="stylesheet.css">
     <!--
-        Date: October 4, 2021
+        Date: March 15, 2022
     -->
 </head>
-<style>
-button {
-    font-size: 5vh;
-    color: white;
-    border-radius: 1vh;
-    padding: 1.2vh 2vw;
-    background-color: #0d5198;
-    border: 0.4vh solid #444;
-    transition-duration: 0.25s;
-}
-button:hover {
-    color: #45900f;
-    border-color: #45900f;
-}
-</style>
 <body style="background-color: #444;">
+    <!-- Input Page -->
     <div id="inputHouse" style="display: flex;">
         <div id="border1" style="display:flex; justify-content:center; align-items:center; width: 45vw; height: 35vh; background-color: #0d5198; margin-top: 31vh; margin-left: 3vw; border-radius: 3vw;">
             <div id="uploadButtonHouse" style="width: 42vw; height: 32vh; background-color: #eee; margin: none; border-radius: 3vw;">
@@ -47,9 +34,41 @@ button:hover {
     <div id="submitHouse">
         <button id="submitText" onclick="textSubmit()" style="position: relative; left: 30vw; width: 40vw; top: 5vh;">Submit Text Input</button>
     </div>
-    <!-- Post upload canvas for Chart.js -->
-    <div id="chart-container" style="position: relative; width: 60vw; height: 80vh; display: none; float: right; top: 10vh; right: 3vw; border: 2vh solid #0d5198; border-radius: 3vw;">
+    <!-- Post upload Chart.js -->
+    <div id="chart-container" style="position: relative; width: 60vw; height: 90vh; display: none; float: right; top: 3vh; right: 3vw; border: 2vh solid #0d5198; border-radius: 3vw;">
         <canvas id="chart"></canvas>
+    </div>
+    <div id="chart-selection" style="position: relative; width: 25vw; height: 90vh; display: none; float: left; top: 3vh; left: 3vw; border: 2vh solid #0d5198; border-radius: 3vw;">
+        <form id="data-selection">
+            <label for="X-Axis">X Axis:</label><br>
+            <select id="X-Axis">
+                <option value="epoch" selected="selected">Epoch (Time)</option>
+                <option value="MeanMotion">Mean Motion (revs/day)</option>
+                <option value="OrbitalPeriod">Orbital period (s)</option>
+                <option value="SemiMajorAxisM">Semi-Major Axis (m)</option>
+                <option value="SemiMajorAxisH">Semi-Major Axis Height (km)</option>
+                <option value="Apoapsis">Apoapsis Height (km)</option>
+                <option value="Periapsis">Periapsis Height (km)</option>
+                <option value="Eccentricity">Eccentricity</option>
+                <option value="Inclination">Inclination</option>
+                <option value="ArgumentOfPeriapsis">Argument of Periapsis</option>
+                <option value="RightAscensionOfAscendingNode">RAAN</option>
+            </select>
+            <br><br><label for="Y-Axis">Y Axis:</label><br>
+            <select id="Y-Axis">
+                <option value="epoch">Epoch (Time)</option>
+                <option value="MeanMotion">Mean Motion (revs/day)</option>
+                <option value="OrbitalPeriod">Orbital period (s)</option>
+                <option value="SemiMajorAxisM">Semi-Major Axis (m)</option>
+                <option value="SemiMajorAxisH" selected="selected">Semi-Major Axis Height (km)</option>
+                <option value="Apoapsis">Apoapsis Height (km)</option>
+                <option value="Periapsis">Periapsis Height (km)</option>
+                <option value="Eccentricity">Eccentricity</option>
+                <option value="Inclination">Inclination</option>
+                <option value="ArgumentOfPeriapsis">Argument of Periapsis</option>
+                <option value="RightAscensionOfAscendingNode">RAAN</option>
+            </select>
+        </form>
     </div>
 </body>
 </html>

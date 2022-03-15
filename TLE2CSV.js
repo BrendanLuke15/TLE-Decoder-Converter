@@ -1,7 +1,7 @@
 /*
 By: Brendan Luke
-Date: October 4, 2021
-Scope: convert TLEs to CSV format
+Date: March 15, 2022
+Scope: convert TLEs to CSV format, then call chart function
 */
 
 // Read uploaded .txt file case:
@@ -77,7 +77,7 @@ function output(data,fileName) {
     }
 
     // create outData object containing all data
-    const outData = {epoch:Epoch, MeanMotion:MM, OrbitalPeriod:T, SemiMajorAxisM:sma, Eccentricity:ecc, Inclination:inc, ArguementOfPeriapsis:weta, RightAscensionOfAscendingNode:RAAN,
+    const outData = {epoch:Epoch, MeanMotion:MM, OrbitalPeriod:T, SemiMajorAxisM:sma, Eccentricity:ecc, Inclination:inc, ArgumentOfPeriapsis:weta, RightAscensionOfAscendingNode:RAAN,
                     Apoapsis:Apo, Periapsis:Peri, SemiMajorAxisH:smaH};
 
     let blobFile = new Blob([csvString], {type: 'text/plain'}); // creates new blob data type from 'csvString' string variable
@@ -93,6 +93,7 @@ function output(data,fileName) {
     document.getElementById("inputHouse").style.display = "none";
     document.getElementById("submitHouse").style.display = "none";
     document.getElementById("chart-container").style.display = "";
+    document.getElementById("chart-selection").style.display = "";
 
     // call charting function
     createChart(outData);
