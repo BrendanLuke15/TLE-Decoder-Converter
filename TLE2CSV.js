@@ -56,7 +56,7 @@ function output(data,fileName) {
 
             // write data
             csvString = csvString + '"' + data[i] + '\n';
-        } else { // second line of TLE
+        } else if (lineNo == '2') { // second line of TLE
             csvString = csvString + data[i] + '\n'; // write TLE to string
             MM[j] = data[i].substring(52,62); // mean motion (revs/day)
             T[j] = 86400/parseFloat(MM[j]); // orbital period (s)
