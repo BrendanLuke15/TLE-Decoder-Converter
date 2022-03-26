@@ -41,8 +41,8 @@ function createChart(outData) { // this is called after the TLE decoded data is 
     });
 
     Xselections.addEventListener("change", function() { // change X data and label
-        myChart.data.datasets[0].label = Yselections.options[Yselections.selectedIndex].text; // change label
-        myChart.data.datasets[0].data = outData[Yselections.value]; // change data
+        myChart.data.datasets[0].label = Xselections.options[Xselections.selectedIndex].text; // change label
+        myChart.data.datasets[0].data = outData[Xselections.value]; // change data
         myChart.update();
     });
     
