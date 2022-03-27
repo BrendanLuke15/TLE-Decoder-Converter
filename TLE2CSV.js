@@ -1,6 +1,6 @@
 /*
 By: Brendan Luke
-Date: March 15, 2022
+Date: March 26, 2022
 Scope: convert TLEs to CSV format, then call chart function
 */
 
@@ -107,8 +107,8 @@ function Epoch2ISODateStr(day, year) {
     minute = Math.floor((((day-dayF)*24)-hour)*60);
     second = Math.floor((((((day-dayF)*24)-hour)*60)-minute)*60);
 
-    temp = new Date(year,0,day,hour,minute,second);
-    month = temp.getUTCMonth() + 1;
+    temp = new Date(year,0,dayF,hour,minute,second);
+    month = temp.getMonth() + 1;
     dayS = temp.getDate();
 
     // fix leading zeros if needed

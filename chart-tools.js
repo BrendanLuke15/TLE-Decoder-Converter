@@ -1,6 +1,6 @@
 /*
 By: Brendan Luke
-Date: March 15, 2022
+Date: March 26, 2022
 Scope: create chart.js plot from TLE data
 */
 
@@ -12,10 +12,9 @@ function createChart(outData) { // this is called after the TLE decoded data is 
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: outData.epoch, // default
             datasets: [{
                 label: 'Semi-Major Axis Height (km)', // default
-                data: outData.SemiMajorAxisH, // default
+                data: [], // initialize empty, populate later
                 backgroundColor: '#0D5198',
                 borderColor: '#0D5198',
                 borderWidth: 1.5,
@@ -26,29 +25,57 @@ function createChart(outData) { // this is called after the TLE decoded data is 
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    //type: 'time',
-                    /*
+                    type: 'time',
                     time: {
+                        unit: 'day',
                         displayFormats: {
-
+                            day: 'yyyy-MMM-dd HH:mm'
+                        }
+                    },
+                    adapters: {
+                        date: {
+                            zone: 'UTC'
                         }
                     }
-                    */
+                },
+                y: {
+                    type: 'linear'
                 }
             }
         },
         plugins: [plugin],
     });
 
+    for (i = 0; i < outData[Xselections.value].length; i++) { // add data
+        myChart.data.datasets[0].data.push({x: luxon.DateTime.fromISO(outData.epoch[i]).ts, y: outData.SemiMajorAxisH[i]});
+    }
+    myChart.update(); // force update to display default data
+
     Xselections.addEventListener("change", function() { // change X data and label
         myChart.data.datasets[0].label = Xselections.options[Xselections.selectedIndex].text; // change label
-        myChart.data.datasets[0].data = outData[Xselections.value]; // change data
+        for (i = 0; i < myChart.data.datasets[0].data.length; i++) { // change x data
+            myChart.data.datasets[0].data[i].x = outData[Xselections.value][i]; 
+        }
+        if (Xselections.value.toString() == 'epoch') {
+            timeFlag = true;
+        } else {
+            timeFlag = false;
+        }
+        axesConfig(myChart.options.scales,timeFlag,true);
         myChart.update();
     });
     
     Yselections.addEventListener("change", function() { // change Y data and label
         myChart.data.datasets[0].label = Yselections.options[Yselections.selectedIndex].text; // change label
-        myChart.data.datasets[0].data = outData[Yselections.value]; // change data
+        for (i = 0; i < myChart.data.datasets[0].data.length; i++) { // change x data
+            myChart.data.datasets[0].data[i].y = outData[Yselections.value][i]; 
+        }
+        if (Yselections.value.toString() == 'epoch') {
+            timeFlag = true;
+        } else {
+            timeFlag = false;
+        }
+        axesConfig(myChart.options.scales,timeFlag,false)
         myChart.update();
     });
 }
@@ -64,3 +91,46 @@ const plugin = {
       ctx.restore();
     }
 };
+
+function axesConfig(scaleOption,timeFlag,xAxis) {
+    // configure axes (time or not)    
+    if (timeFlag) { // is 'epoch' data
+        if (xAxis) { // is x-axis
+            scaleOption.x = {
+                type: 'time',
+                time: {
+                    unit: 'day',
+                    displayFormats: {
+                        day: 'yyyy-MMM-dd HH:mm'
+                    }
+                },
+                adapters: {
+                    date: {
+                        zone: 'UTC'
+                    }
+                }
+            }
+        } else { // is y-axis
+            scaleOption.y = {
+                type: 'time',
+                time: {
+                    unit: 'day',
+                    displayFormats: {
+                        day: 'yyyy-MMM-dd HH:mm'
+                    }
+                },
+                adapters: {
+                    date: {
+                        zone: 'UTC'
+                    }
+                }
+            }
+        }
+    } else { // any other data field
+        if (xAxis) { // is x-axis
+            scaleOption.x = {type: 'linear'}
+        } else { // is y-axis
+            scaleOption.y = {type: 'linear'}
+        }
+    }
+}

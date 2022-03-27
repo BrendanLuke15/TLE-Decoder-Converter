@@ -9,12 +9,15 @@
     <meta name="author" content="Brendan Luke">
     <script src="TLE2CSV.js" async></script>
     <script src="chart-tools.js" async></script>
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <!-- Satellite dish icons created by Freepik - Flaticon -->
+    <!-- Space icons created by Freepik - Flaticon -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.1/build/global/luxon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.1.0"></script>
     <link rel="stylesheet" href="stylesheet.css">
     <!--
-        Date: March 15, 2022
+        Date: March 26, 2022
     -->
 </head>
 <body style="background-color: #444;">
@@ -44,7 +47,7 @@
         <form id="data-selection">
             <label for="X-Axis">X Axis:</label><br>
             <select id="X-Axis">
-                <option value="epoch" selected="selected">Epoch (Time)</option>
+                <option value="epoch" selected="selected">Epoch (Time, UTC)</option>
                 <option value="MeanMotion">Mean Motion (revs/day)</option>
                 <option value="OrbitalPeriod">Orbital period (s)</option>
                 <option value="SemiMajorAxisM">Semi-Major Axis (m)</option>
@@ -58,7 +61,7 @@
             </select>
             <br><br><label for="Y-Axis">Y Axis:</label><br>
             <select id="Y-Axis">
-                <option value="epoch">Epoch (Time)</option>
+                <option value="epoch">Epoch (Time, UTC)</option>
                 <option value="MeanMotion">Mean Motion (revs/day)</option>
                 <option value="OrbitalPeriod">Orbital period (s)</option>
                 <option value="SemiMajorAxisM">Semi-Major Axis (m)</option>
